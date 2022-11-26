@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import socket
 import threading
 import time
@@ -6,7 +7,7 @@ def start_server():
     print('Start server')
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('192.168.43.188', 5000))
+    server_socket.bind(('192.168.43.241', 5000))
     server_socket.listen(2)
     ard_client, track_client = arrange_client(server_socket)
 
@@ -72,6 +73,11 @@ def server_arduino_TCP(ard_client_socket, ard_addr):
             if (data == 'receive id'):
                 continue
             elif (data == 'pass1'):
+                while (True):
+                    ard_client_socket.sendall(b'pass reader')
+                    data = ard_client_socket.recv(32).decode()
+                    if (data == 'receive id'):
+                        break
                 continue
             time.sleep(0.1)
         elif (data == 'pass2'):
